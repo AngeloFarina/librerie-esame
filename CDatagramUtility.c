@@ -67,6 +67,12 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 	printf("Client: creata la socket sd=%d\n", sd);
+	//parte server
+	//------------------------- OPZIONI SERVER SOCKET ----------------------------
+	if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0){
+		perror("set opzioni socket ");
+		exit(1);
+	}
 
 	//---------------------------- BIND SOCKET -------------------------------
 	if (bind(sd, (struct sockaddr *) &clientaddr, sizeof(clientaddr)) < 0){
@@ -90,20 +96,14 @@ int main(int argc, char **argv){
 		perror("recvfrom");
 		continue;
 	}
-
-	//---------------------------- CHIUSURA SOCKET -------------------------------
-	close(sd);
-
-	//------------------------- OPZIONI SERVER SOCKET ----------------------------
-	if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0){
-		perror("set opzioni socket ");
-		exit(1);
-	}
-
+	//parte server
 	//------------------------- HOST SERVER SOCKET ----------------------------
 	clienthost = gethostbyaddr((char *) &clientaddr.sin_addr,sizeof(clientaddr.sin_addr), AF_INET);
 	if (clienthost == NULL)
 		printf("client host information not found\n");
 	else 
 		printf("Operazione richiesta da: %s %i\n", clienthost->h_name, (unsigned) ntohs(cliaddr.sin_port));
+
+	//---------------------------- CHIUSURA SOCKET -------------------------------
+	close(sd);
 }
