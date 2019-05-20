@@ -8,6 +8,8 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+//commento aggiunto da remoto, successivo commit con git
+
 int main(int argc, char **argv){
 	int nread, len;
 	struct hostent *host, *clienthost;
